@@ -61,7 +61,13 @@
           <input type="search" id="fonts-searchbox" name="fonts-searchbox" value="" placeholder="Open Sans, Roboto" title="One or more fonts, separated by commas">
         </label>
       </p>
-      <div class="fonts-header">Your Favorites:</div>
+      <div class="fonts-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Your Favorites:</span>
+        <div>
+          <button id="btn-export" style="font-size: 10px; cursor: pointer;">Export</button>
+          <button id="btn-import" style="font-size: 10px; cursor: pointer;">Import</button>
+        </div>
+      </div>
       <div id="fonts-starred"></div>
       <div class="fonts-header">Browse All:</div>
       <div id="fonts-all">
@@ -129,6 +135,9 @@
 
    <div id="step4">
      To start over, reload the page.
+   </div>
+   <div style="display: none;">
+    <input type="file" id="file-import" accept=".json">
    </div>
   </form>
   <script src="jquery.js"></script>

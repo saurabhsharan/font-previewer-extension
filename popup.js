@@ -47,6 +47,47 @@ async function onLoad() {
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
   document.getElementById("fonts-subset").addEventListener("change", debounce(onSubsetChange));
   document.getElementById("fonts-searchbox").addEventListener("input", debounce(onSearchChange));
+  
+  document.getElementById("btn-export").addEventListener("click", function(e) {
+      e.preventDefault();
+      var favorites = localStarage.exportFavorites();
+      var blob = new Blob([JSON.stringify(favorites)], {type: "application/json"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = "font-previewer-favorites.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("btn-import").addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("file-import").click();
+  });
+
+  document.getElementById("file-import").addEventListener("change", function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+          try {
+              var favorites = JSON.parse(e.target.result);
+              localStarage.importFavorites(favorites, document.getElementById('fonts-all'), {
+                 starredList: document.getElementById('fonts-starred'),
+                 onClone: addRowBehavior
+              });
+              alert("Favorites imported successfully!");
+          } catch (error) {
+              alert("Error importing favorites: " + error.message);
+          }
+      };
+      reader.readAsText(file);
+      e.target.value = ''; // Reset file input
+  });
+
   // Temporarily disable reset link as this functionality is broken
   // document.getElementById("resetLink").addEventListener("click", resetFont);
 
